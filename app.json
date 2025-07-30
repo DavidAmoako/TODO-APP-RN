@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "TODO-APP",
-    "slug": "TODO-APP",
+    "slug": "todo-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -37,6 +37,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "bd5e5538-1043-4468-8739-5133936b69d4"
+      }
+    },
+    "owner": "sirxechs"
   }
 }
