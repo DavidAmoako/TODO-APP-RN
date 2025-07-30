@@ -37,6 +37,9 @@ const TodoInput = () => {
           onChangeText={setNewTodo}
           onSubmitEditing={handleAddTodo}
           placeholderTextColor={colors.textMuted}
+          returnKeyType="done"
+          multiline={false}
+          maxLength={200}
         />
         <TouchableOpacity 
         onPress={handleAddTodo} 

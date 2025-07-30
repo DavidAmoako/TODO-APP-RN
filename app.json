@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "TODO-APP-RN",
-    "slug": "TODO-APP-RN",
+    "name": "TODO-APP",
+    "slug": "TODO-APP",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "todoapprn",
+    "scheme": "todoapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
