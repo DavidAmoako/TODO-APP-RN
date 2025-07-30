@@ -1,4 +1,25 @@
-# Welcome to your Expo app 👋
+# TODO App - React Native 📝
+
+A modern, feature-rich TODO application built with React Native and Expo. This app helps you organize your daily tasks with an intuitive interface and seamless user experience across iOS and Android platforms.
+
+## Features
+
+- ✅ **Task Management**: Create, edit, and delete tasks effortlessly
+- 📱 **Cross-Platform**: Runs natively on both iOS and Android devices
+- 🎨 **Modern UI**: Clean and intuitive user interface with smooth animations
+- 📊 **Task Organization**: Categorize and prioritize your tasks
+- 🔄 **Real-time Updates**: Instant synchronization of task changes across devices
+- 💾 **Cloud Storage**: Your tasks are securely stored in the cloud and sync across all devices
+- 🌙 **Dark Mode Support**: Comfortable viewing in any lighting condition
+- ⚡ **Offline Support**: Continue working even without internet connection
+
+## Tech Stack
+
+- **React Native** - Cross-platform mobile framework
+- **Expo** - Development platform and tools
+- **TypeScript** - Type-safe JavaScript
+- **Expo Router** - File-based navigation system
+- **Convex** - Real-time backend database with automatic synchronization
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
@@ -25,15 +46,6 @@ In the output, you'll find options to open the app in a
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
 ## Learn more
 
