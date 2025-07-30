@@ -1,24 +1,54 @@
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { createSettingsStyles } from '@/assets/styles/settings.styles';
+import DangerZone from '@/components/DangerZone';
+import Preferences from '@/components/Preferences';
+import ProgressStats from '@/components/ProgressStats';
+import useTheme from '@/hooks/useTheme';
+import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import React from 'react';
+import { ScrollView, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SettingsScreen = () => {
+
+  const { colors } = useTheme();
+
+  const settingStyles = createSettingsStyles(colors);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>SettingsScreen</Text>
-    </View>
+    <LinearGradient colors={colors.gradients.background} style={settingStyles.container}>
+      <SafeAreaView style={settingStyles.safeArea}>
+        {/** Header */}
+        <View style={settingStyles.header}>
+          <View style={settingStyles.titleContainer}>
+            <LinearGradient colors={colors.gradients.primary} style={settingStyles.iconContainer}>
+              <Ionicons name="settings" size={28} color="#fff" />
+            </LinearGradient>
+            <Text style={settingStyles.title}>Settings</Text>
+          </View>
+        </View>
+
+        {/** Settings Options */}
+        <ScrollView
+          style={settingStyles.scrollView}
+          contentContainerStyle={settingStyles.content}
+          showsVerticalScrollIndicator={false}
+        >
+
+          <ProgressStats />
+
+          {/** Preferences */}
+          <Preferences />
+
+          {/** Danger Zone */}
+          <DangerZone />
+
+        </ScrollView>
+
+      </SafeAreaView>
+    </LinearGradient>
   )
 }
 
 export default SettingsScreen
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    text: {
-        color: '000',
-        fontSize: 20,
-    },
-})
