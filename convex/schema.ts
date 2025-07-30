@@ -4,15 +4,13 @@ import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
 
 /**
- * Database Schema Definition
- * Defines the structure and validation rules for all database tables
- * This schema ensures type safety and data consistency across the application
+ * Database Schema Definition with Device-Based User Identification
+ * Uses device IDs instead of email authentication for user data isolation
  */
 export default defineSchema({
     /**
-     * Todos Table Schema
-     * Defines the structure for todo items stored in the database
-     * Each todo has text content and a completion status
+     * Todos Table Schema (Device-Based User Isolation)
+     * Associates todos with unique device identifiers
      */
     todos: defineTable({
         // Todo text content - stores the actual task description
@@ -21,14 +19,11 @@ export default defineSchema({
         // Completion status - tracks whether the todo is done or not
         isCompleted: v.boolean(), // Required boolean field for completion state
         
+        // Device ID - unique identifier for device/user isolation
+        deviceId: v.string(),   // Device-generated unique identifier
+        
         // Note: Convex automatically adds these fields:
         // - _id: unique identifier for each todo item
         // - _creationTime: timestamp when the todo was created
-    }),
-    
-    // Additional tables can be added here as the app grows
-    // Example potential tables:
-    // users: defineTable({ ... }),     // User profiles and authentication
-    // categories: defineTable({ ... }), // Todo categories/tags
-    // settings: defineTable({ ... }),   // User preferences and app settings
+    }).index("by_device", ["deviceId"]), // Index for efficient device-specific queries
 });

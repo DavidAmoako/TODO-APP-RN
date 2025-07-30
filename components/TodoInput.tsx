@@ -1,5 +1,6 @@
 import { createHomeStyles } from '@/assets/styles/home.styles';
 import { api } from '@/convex/_generated/api';
+import useDeviceId from '@/hooks/useDeviceId';
 import useTheme from '@/hooks/useTheme';
 import { Ionicons } from '@expo/vector-icons';
 import { useMutation } from 'convex/react';
@@ -8,17 +9,17 @@ import React from 'react';
 import { Alert, TextInput, TouchableOpacity, View } from 'react-native';
 
 const TodoInput = () => {
-
     const { colors } = useTheme();
+    const { deviceId } = useDeviceId();
     const homeStyles = createHomeStyles(colors);
 
     const [newTodo, setNewTodo] = React.useState('');
     const addTodo = useMutation(api.todos.addTodo);
 
     const handleAddTodo = async() => {
-        if (newTodo.trim()) {
+        if (newTodo.trim() && deviceId) {
             try {
-                await addTodo({ text: newTodo.trim() });
+                await addTodo({ text: newTodo.trim(), deviceId });
                 setNewTodo('');
             } catch (error) {
                 Alert.alert("Error", "Failed to add todo. Please try again.");

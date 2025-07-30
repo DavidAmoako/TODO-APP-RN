@@ -6,6 +6,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import TodoInput from "@/components/TodoInput";
 import { api } from "@/convex/_generated/api";
 import { Doc, Id } from "@/convex/_generated/dataModel";
+import useDeviceId from "@/hooks/useDeviceId"; // Import device ID hook
 import useTheme from "@/hooks/useTheme";
 import Ionicons from "@expo/vector-icons/build/Ionicons";
 import { useMutation, useQuery } from "convex/react";
@@ -20,33 +21,39 @@ type Todo = Doc<"todos">;
 export default function Index() {
   // Get the current theme colors for consistent styling across the app
   const {colors} = useTheme();
+  
+  // Get device ID for user identification
+  const { deviceId, isLoading: deviceIdLoading } = useDeviceId();
 
   // State management for inline editing functionality
-  const [editingId, setEditingId] = useState<Id<"todos"> | null>(null); // Track which todo is being edited
-  const [editText, setEditText] = useState(""); // Store the temporary edit text
+  const [editingId, setEditingId] = useState<Id<"todos"> | null>(null);
+  const [editText, setEditText] = useState("");
 
   // Create styles based on current theme colors
   const homeStyles = createHomeStyles(colors);
 
-  // Convex database operations - these provide real-time data synchronization
-  const todos = useQuery(api.todos.getTodos); // Fetch all todos from the database
-  const toggleTodo = useMutation(api.todos.toggleTodo); // Toggle completion status of a todo
-  const deleteTodo = useMutation(api.todos.deleteTodo); // Delete a todo from the database
-  const updateTodo = useMutation(api.todos.updateTodo); // Update todo text
+  // Convex database operations - now include device ID for user isolation
+  const todos = useQuery(api.todos.getTodos, deviceId ? { deviceId } : "skip");
+  const toggleTodo = useMutation(api.todos.toggleTodo);
+  const deleteTodo = useMutation(api.todos.deleteTodo);
+  const updateTodo = useMutation(api.todos.updateTodo);
 
-  // Check if data is still loading from the database
-  const isLoading = todos === undefined;
+  // Check if data is still loading (either device ID or todos)
+  const isLoading = deviceIdLoading || todos === undefined;
 
   // Show loading spinner while data is being fetched
   if(isLoading) return <LoadingSpinner/>
 
+  // Don't render anything if device ID is not available
+  if (!deviceId) return <LoadingSpinner/>;
+
   /**
    * Toggle the completion status of a todo item
-   * Includes error handling to provide user feedback if operation fails
+   * Now includes device ID for authorization
    */
   const handleToggleTodo = async(id: Id<"todos">) => {
     try {
-      await toggleTodo({id});
+      await toggleTodo({id, deviceId});
     } catch (error) {
       console.log("Error toggling todo:", error);
       Alert.alert("Error", "Failed to update todo. Please try again.");
@@ -55,18 +62,17 @@ export default function Index() {
 
   /**
    * Delete a todo item with confirmation dialog
-   * Shows an alert to prevent accidental deletions
+   * Now includes device ID for authorization
    */
   const handleDeleteTodo = async(id: Id<"todos">) => {
       Alert.alert("Delete Todo", "Are you sure you want to delete this todo?", [
         { text: "Cancel", style: "cancel"},
-        { text: "Delete", style: "destructive", onPress: () => deleteTodo({id}),},
+        { text: "Delete", style: "destructive", onPress: () => deleteTodo({id, deviceId}),},
       ]);
   };
 
   /**
    * Initialize inline editing mode for a todo item
-   * Sets the editing state and populates the edit text field
    */
   const handleEditTodo = (todo: Todo) => {
     setEditingId(todo._id);
@@ -75,14 +81,14 @@ export default function Index() {
 
   /**
    * Save the edited todo text to the database
-   * Includes validation and error handling
+   * Now includes device ID for authorization
    */
   const handleSaveEdit = async() => {
     if(editingId) {
       try {
-        await updateTodo({id: editingId, text: editText.trim()});
-        setEditingId(null); // Exit editing mode
-        setEditText(""); // Clear edit text
+        await updateTodo({id: editingId, text: editText.trim(), deviceId});
+        setEditingId(null);
+        setEditText("");
       } catch (error) {
         console.log("Error updating todo:", error);
         Alert.alert("Error", "Failed to update todo. Please try again.");
@@ -92,7 +98,6 @@ export default function Index() {
 
   /**
    * Cancel editing mode without saving changes
-   * Resets the editing state
    */
   const handleCancelEdit = () => {
     setEditingId(null);

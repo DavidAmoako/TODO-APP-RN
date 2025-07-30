@@ -4,104 +4,149 @@ import { ConvexError, v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 
 /**
- * Query: Get All Todos
- * Retrieves all todo items from the database ordered by creation date (newest first)
- * This is a reactive query - UI automatically updates when data changes
+ * Query: Get Device-Specific Todos
+ * Retrieves only the todos belonging to the specific device
+ * Provides complete data isolation between devices/users
  */
 export const getTodos = query({
-    handler: async (ctx) => {
-        // Query the 'todos' table, order by creation date (desc = newest first), collect all results
-        const todos = await ctx.db.query('todos').order("desc").collect();
+    // Requires device ID to identify which todos to retrieve
+    args: { deviceId: v.string() },
+    handler: async (ctx, args) => {
+        // Query only the todos that belong to this specific device
+        const todos = await ctx.db
+            .query('todos')
+            .withIndex("by_device", (q) => q.eq("deviceId", args.deviceId))
+            .order("desc")
+            .collect();
+        
         return todos;
     },
 });
 
 /**
- * Mutation: Add New Todo
- * Creates a new todo item in the database with the provided text
- * All new todos are created with isCompleted: false by default
+ * Mutation: Add New Device-Specific Todo
+ * Creates a new todo item linked to the specific device
  */
 export const addTodo = mutation({
-    // Input validation: requires a string parameter called 'text'
-    args: { text: v.string() },
+    // Input validation: requires todo text and device ID
+    args: { 
+        text: v.string(),
+        deviceId: v.string()
+    },
     handler: async (ctx, args) => {
-        // Insert new todo into the database with default completion status
+        // Insert new todo linked to the device
         const todoId = await ctx.db.insert('todos', { 
             text: args.text,           // User-provided todo text
-            isCompleted: false         // Default to incomplete status
+            isCompleted: false,        // Default to incomplete status
+            deviceId: args.deviceId    // Link to specific device
         });
-        return todoId; // Return the generated ID for the new todo
+        
+        return todoId;
     },
 });
 
 /**
- * Mutation: Toggle Todo Completion Status
- * Switches a todo between completed and incomplete states
- * Includes error handling for non-existent todos
+ * Mutation: Toggle Device's Todo Completion Status
+ * Only allows modification of todos belonging to the same device
  */
 export const toggleTodo = mutation({
-    // Input validation: requires a valid todo ID
-    args: { id: v.id('todos') },
+    args: { 
+        id: v.id('todos'),
+        deviceId: v.string()
+    },
     handler: async (ctx, args) => {
-        // First, retrieve the todo to check if it exists and get current status
+        // Get the todo and verify it belongs to the current device
         const todo = await ctx.db.get(args.id);
         
-        // Error handling: throw custom error if todo doesn't exist
         if (!todo) {
             throw new ConvexError('Todo not found');
         }
+
+        // Verify the todo belongs to the current device
+        if (todo.deviceId !== args.deviceId) {
+            throw new ConvexError('Not authorized to modify this todo');
+        }
         
-        // Update the todo's completion status to the opposite of current state
+        // Update the todo's completion status
         await ctx.db.patch(args.id, { isCompleted: !todo.isCompleted });
     },
 });
 
 /**
- * Mutation: Delete Todo
- * Permanently removes a todo item from the database
- * Simple deletion without confirmation (confirmation handled in UI)
+ * Mutation: Delete Device's Todo
+ * Only allows deletion of todos belonging to the same device
  */
 export const deleteTodo = mutation({
-    // Input validation: requires a valid todo ID
-    args: { id: v.id('todos') },
+    args: { 
+        id: v.id('todos'),
+        deviceId: v.string()
+    },
     handler: async (ctx, args) => {
-        // Delete the todo from the database using its ID
+        // Get the todo and verify it belongs to the current device
+        const todo = await ctx.db.get(args.id);
+        
+        if (!todo) {
+            throw new ConvexError('Todo not found');
+        }
+
+        // Verify the todo belongs to the current device
+        if (todo.deviceId !== args.deviceId) {
+            throw new ConvexError('Not authorized to delete this todo');
+        }
+
+        // Delete the todo
         await ctx.db.delete(args.id);
     },
 });
 
 /**
- * Mutation: Update Todo Text
- * Modifies the text content of an existing todo item
- * Used for inline editing functionality in the UI
+ * Mutation: Update Device's Todo Text
+ * Only allows updating todos belonging to the same device
  */
 export const updateTodo = mutation({
-    // Input validation: requires todo ID and new text content
-    args: { id: v.id('todos'), text: v.string() },
+    args: { 
+        id: v.id('todos'), 
+        text: v.string(),
+        deviceId: v.string()
+    },
     handler: async (ctx, args) => {
-        // Update only the text field of the specified todo
+        // Get the todo and verify it belongs to the current device
+        const todo = await ctx.db.get(args.id);
+        
+        if (!todo) {
+            throw new ConvexError('Todo not found');
+        }
+
+        // Verify the todo belongs to the current device
+        if (todo.deviceId !== args.deviceId) {
+            throw new ConvexError('Not authorized to update this todo');
+        }
+
+        // Update the todo text
         await ctx.db.patch(args.id, { text: args.text });
     },
 });
 
 /**
- * Mutation: Clear All Todos (Danger Zone Operation)
- * Removes all todo items from the database
- * Returns count of deleted items for user feedback
- * Used in settings "Danger Zone" for bulk operations
+ * Mutation: Clear All Device's Todos (Device-Specific Danger Zone)
+ * Only deletes todos belonging to the current device
  */
 export const clearAllTodos = mutation({
-    handler: async (ctx) => {
-        // First, get all todos to count them before deletion
-        const todos = await ctx.db.query('todos').collect();
+    args: { deviceId: v.string() },
+    handler: async (ctx, args) => {
+        // Get only the todos belonging to this device
+        const deviceTodos = await ctx.db
+            .query('todos')
+            .withIndex("by_device", (q) => q.eq("deviceId", args.deviceId))
+            .collect();
         
-        // Delete each todo individually (Convex doesn't support bulk delete)
-        for (const todo of todos) {
+        // Delete each todo belonging to the device
+        for (const todo of deviceTodos) {
             await ctx.db.delete(todo._id);
         }
         
         // Return count of deleted items for user feedback
-        return { deletedCount: todos.length };
+        return { deletedCount: deviceTodos.length };
     },
 });
 
