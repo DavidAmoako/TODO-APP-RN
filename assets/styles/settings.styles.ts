@@ -155,6 +155,86 @@ export const createSettingsStyles = (colors: ColorScheme) => {
       fontWeight: "600",
       color: colors.danger,
     },
+    motivationalText: {
+      fontSize: 12,
+      color: colors.textMuted,
+      textAlign: "center",
+      marginTop: 4,
+      fontStyle: "italic",
+    },
+    dangerWarning: {
+      fontSize: 12,
+      color: colors.warning,
+      marginBottom: 16,
+      textAlign: "center",
+      fontStyle: "italic",
+    },
+    actionTextContainer: {
+      flex: 1,
+    },
+    actionSubtext: {
+      fontSize: 12,
+      color: colors.textMuted,
+      marginTop: 2,
+    },
+    actionButtonDisabled: {
+      opacity: 0.5,
+    },
+    actionTextDisabled: {
+      color: colors.textMuted,
+    },
+    deviceInfo: {
+      fontSize: 10,
+      color: colors.textMuted,
+      textAlign: "center",
+      marginTop: 8,
+      fontStyle: "italic",
+    },
+    productivityStatus: {
+      fontSize: 14,
+      color: colors.primary,
+      textAlign: "center",
+      marginBottom: 16,
+      fontWeight: "500",
+    },
+    statContent: {
+      flex: 1,
+    },
+    statPercentage: {
+      fontSize: 10,
+      color: colors.textMuted,
+      marginTop: 2,
+      fontStyle: "italic",
+    },
+    summaryContainer: {
+      marginTop: 16,
+      padding: 12,
+      backgroundColor: colors.surface,
+      borderRadius: 8,
+    },
+    summaryText: {
+      fontSize: 13,
+      color: colors.text,
+      textAlign: "center",
+      fontWeight: "500",
+    },
+    summarySubtext: {
+      fontSize: 11,
+      color: colors.textMuted,
+      textAlign: "center",
+      marginTop: 4,
+    },
+    emptyStatsContainer: {
+      marginTop: 16,
+      padding: 20,
+      alignItems: "center",
+    },
+    emptyStatsText: {
+      fontSize: 13,
+      color: colors.textMuted,
+      textAlign: "center",
+      fontStyle: "italic",
+    },
   });
 
   return styles;
