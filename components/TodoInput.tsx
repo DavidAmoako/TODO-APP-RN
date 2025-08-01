@@ -12,7 +12,6 @@ const TodoInput = () => {
     const { colors } = useTheme();
     const { deviceId } = useDeviceId();
     const homeStyles = createHomeStyles(colors);
-
     const [newTodo, setNewTodo] = React.useState('');
     const addTodo = useMutation(api.todos.addTodo);
 

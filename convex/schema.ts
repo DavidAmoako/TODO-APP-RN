@@ -14,11 +14,9 @@ export default defineSchema({
      */
     todos: defineTable({
         // Todo text content - stores the actual task description
-        text: v.string(),        // Required string field for todo content
-        
+        text: v.string(),        
         // Completion status - tracks whether the todo is done or not
-        isCompleted: v.boolean(), // Required boolean field for completion state
-        
+        isCompleted: v.boolean(), 
         // Device ID - unique identifier for device/user isolation
         deviceId: v.string(),   // Device-generated unique identifier
         
