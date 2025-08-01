@@ -5,17 +5,20 @@ import { mutation, query } from './_generated/server';
 
 /**
  * Query: Get Device-Specific Todos
- * Retrieves only the todos belonging to the specific device
- * Provides complete data isolation between devices/users
+ * Returns empty array if no deviceId provided (handles loading states)
  */
 export const getTodos = query({
-    // Requires device ID to identify which todos to retrieve
-    args: { deviceId: v.string() },
+    args: { deviceId: v.optional(v.string()) }, // Make deviceId optional
     handler: async (ctx, args) => {
-        // Query only the todos that belong to this specific device
+        // Return empty array if no device ID provided
+        if (!args.deviceId) {
+            return [];
+        }
+
+        // TypeScript now knows args.deviceId is definitely a string here
         const todos = await ctx.db
             .query('todos')
-            .withIndex("by_device", (q) => q.eq("deviceId", args.deviceId))
+            .withIndex("by_device", (q) => q.eq("deviceId", args.deviceId!)) // Use non-null assertion
             .order("desc")
             .collect();
         

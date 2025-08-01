@@ -34,6 +34,7 @@ export default function Index() {
 
   // Convex database operations - now include device ID for user isolation
   const todos = useQuery(api.todos.getTodos, deviceId ? { deviceId } : "skip");
+  //const todos = useQuery(api.todos.getTodos, { deviceId });
   const toggleTodo = useMutation(api.todos.toggleTodo);
   const deleteTodo = useMutation(api.todos.deleteTodo);
   const updateTodo = useMutation(api.todos.updateTodo);
