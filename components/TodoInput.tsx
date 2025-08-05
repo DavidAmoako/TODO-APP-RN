@@ -58,7 +58,7 @@ const TodoInput = () => {
 
         try {
             // Add todo to database with device ID for user isolation
-            const result = await addTodo({ 
+            await addTodo({ 
                 text: newTodo.trim(), 
                 deviceId 
             });
