@@ -32,14 +32,13 @@ const Header = () => {
     // Handle cases where todos is undefined (loading) or deviceId is not ready
     const totalTodos = todos ? todos.length : 0;
     const completedTodos = todos ? todos.filter((todo) => todo.isCompleted).length : 0;
-    const pendingTodos = totalTodos - completedTodos;
 
     // Calculate completion percentage for progress bar
     // Handles edge cases: division by zero and ensures clean percentage display
     const progress = totalTodos > 0 ? (completedTodos / totalTodos) * 100 : 0;
 
     // Determine motivational message based on progress
-    const getMotivationalMessage = () => {
+/*     const getMotivationalMessage = () => {
         if (totalTodos === 0) return "Ready to start your day!";
         if (progress === 100) return "All done! Great job! 🎉";
         if (progress >= 75) return "Almost there! Keep going! 💪";
@@ -47,7 +46,7 @@ const Header = () => {
         if (progress >= 25) return "Good start! Keep it up! ⭐";
         return "Let's get started! 💼";
     };
-
+ */
     return (
         // Main header container
         <View style={homeStyles.header}>
@@ -67,8 +66,9 @@ const Header = () => {
                     {/* Dynamic subtitle showing detailed completion status */}
                     {/* Updates in real-time as todos are completed, added, or deleted */}
                     <Text style={homeStyles.subtitle}>
-                        {completedTodos} completed • {pendingTodos} pending • {totalTodos} total
-                    </Text>          
+                        {completedTodos} of {totalTodos} completed
+                    </Text>
+                              
                 </View>
             </View>
 
@@ -97,9 +97,9 @@ const Header = () => {
                 </View>
 
                 {/* Optional: Motivational message based on progress */}
-                <Text style={homeStyles.motivationalText}>
+{/*                 <Text style={homeStyles.motivationalText}>
                     {getMotivationalMessage()}
-                </Text>
+                </Text> */}
             </View>
         </View>
     )

@@ -205,7 +205,6 @@ export default function Index() {
               </View>
             </View>
           )}
-
         </LinearGradient>
       </View>
     );
