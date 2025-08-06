@@ -72,7 +72,7 @@ const useDeviceId = () => {
       console.error('Error generating device ID:', error);
       
       // Fallback: generate a simple random ID if everything else fails
-      const fallbackId = `device_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const fallbackId = `device_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
       await AsyncStorage.setItem('device_id', fallbackId);
       setDeviceId(fallbackId);
       setIsLoading(false);
