@@ -1,13 +1,8 @@
-// Import styles for home screen components
-import { createHomeStyles } from "@/assets/styles/home.styles";
-// Import custom theme hook for consistent styling
-import useTheme from "@/hooks/useTheme";
-// Import Ionicons for consistent iconography
-import { Ionicons } from "@expo/vector-icons";
-// Import LinearGradient for modern visual styling
-import { LinearGradient } from "expo-linear-gradient";
-// Import React Native components for UI structure
-import { Text, View } from "react-native";
+import { createHomeStyles } from "@/assets/styles/home.styles"; // Import styles for home screen components
+import useTheme from "@/hooks/useTheme"; // Import custom theme hook for consistent styling
+import { Ionicons } from "@expo/vector-icons"; // Import Ionicons for consistent iconography
+import { LinearGradient } from "expo-linear-gradient"; // Import LinearGradient for modern visual styling
+import { Text, View } from "react-native"; // Import React Native components for UI structure
 
 /**
  * EmptyState Component

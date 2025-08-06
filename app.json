@@ -9,14 +9,19 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sirxechs.TODOAPP",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.sirxechs.TODOAPP"
     },
     "web": {
       "bundler": "metro",
@@ -41,8 +46,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "bd5e5538-1043-4468-8739-5133936b69d4"
-      }
+        "projectId": "a8bb18ee-2ab1-4464-97e0-f91fbc56ccc0"
     },
     "owner": "sirxechs"
   }

@@ -101,6 +101,10 @@ export const createHomeStyles = (colors: ColorScheme) => {
       borderColor: colors.border,
       color: colors.text,
     },
+    inputDisabled: {
+      opacity: 0.6,
+      backgroundColor: colors.surface,
+    },
     inputFocused: {
       borderColor: colors.primary,
     },
@@ -111,8 +115,28 @@ export const createHomeStyles = (colors: ColorScheme) => {
       justifyContent: "center",
       alignItems: "center",
     },
+    addButtonContainer: {
+      // Container for add button positioning
+    },
     addButtonDisabled: {
       opacity: 0.5,
+    },
+    characterCount: {
+      position: "absolute",
+      right: 60,
+      bottom: 8,
+      fontSize: 10,
+      color: colors.textMuted,
+      backgroundColor: colors.surface,
+      paddingHorizontal: 4,
+      borderRadius: 4,
+    },
+    deviceStatusError: {
+      fontSize: 11,
+      color: colors.danger,
+      textAlign: "center",
+      marginTop: 4,
+      fontStyle: "italic",
     },
     todoList: {
       flex: 1,
@@ -232,6 +256,13 @@ export const createHomeStyles = (colors: ColorScheme) => {
       paddingHorizontal: 40,
       lineHeight: 24,
       color: colors.textMuted,
+    },
+    motivationalText: {
+      fontSize: 12,
+      color: colors.textMuted,
+      textAlign: "center",
+      marginTop: 4,
+      fontStyle: "italic",
     },
   });
 

@@ -4,104 +4,292 @@ import { ConvexError, v } from 'convex/values';
 import { mutation, query } from './_generated/server';
 
 /**
- * Query: Get All Todos
- * Retrieves all todo items from the database ordered by creation date (newest first)
- * This is a reactive query - UI automatically updates when data changes
+ * Query: Get Device-Specific Todos
+ * Returns empty array if no deviceId provided (handles loading states)
+ * Provides complete data isolation between devices
  */
 export const getTodos = query({
-    handler: async (ctx) => {
-        // Query the 'todos' table, order by creation date (desc = newest first), collect all results
-        const todos = await ctx.db.query('todos').order("desc").collect();
-        return todos;
+    args: { deviceId: v.optional(v.string()) }, // Make deviceId optional for loading states
+    handler: async (ctx, args) => {
+        // Return empty array if no device ID provided (during app initialization)
+        if (!args.deviceId) {
+            return [];
+        }
+
+        // Store deviceId in variable for better type safety and readability
+        const deviceId = args.deviceId;
+
+        try {
+            // Query todos that belong specifically to this device
+            const todos = await ctx.db
+                .query('todos')
+                .withIndex("by_device", (q) => q.eq("deviceId", deviceId))
+                .order("desc") // Most recent todos first
+                .collect();
+            
+            return todos;
+        } catch (error) {
+            console.error('Error fetching todos for device:', deviceId, error);
+            throw new ConvexError('Failed to fetch todos');
+        }
     },
 });
 
 /**
- * Mutation: Add New Todo
- * Creates a new todo item in the database with the provided text
- * All new todos are created with isCompleted: false by default
+ * Mutation: Add New Device-Specific Todo
+ * Creates a new todo item linked to the specific device
+ * Ensures device isolation from the moment of creation
  */
 export const addTodo = mutation({
-    // Input validation: requires a string parameter called 'text'
-    args: { text: v.string() },
+    args: { 
+        text: v.string(),
+        deviceId: v.string() // Required for creating todos
+    },
     handler: async (ctx, args) => {
-        // Insert new todo into the database with default completion status
-        const todoId = await ctx.db.insert('todos', { 
-            text: args.text,           // User-provided todo text
-            isCompleted: false         // Default to incomplete status
-        });
-        return todoId; // Return the generated ID for the new todo
+        // Validate input text
+        if (!args.text.trim()) {
+            throw new ConvexError('Todo text cannot be empty');
+        }
+
+        // Validate device ID
+        if (!args.deviceId) {
+            throw new ConvexError('Device ID is required');
+        }
+
+        try {
+            // Insert new todo with device association
+            const todoId = await ctx.db.insert('todos', { 
+                text: args.text.trim(),    // Clean the text input
+                isCompleted: false,        // Default to incomplete status
+                deviceId: args.deviceId    // Link to specific device for isolation
+            });
+            
+            return todoId;
+        } catch (error) {
+            console.error('Error adding todo for device:', args.deviceId, error);
+            throw new ConvexError('Failed to add todo');
+        }
     },
 });
 
 /**
- * Mutation: Toggle Todo Completion Status
- * Switches a todo between completed and incomplete states
- * Includes error handling for non-existent todos
+ * Mutation: Toggle Device's Todo Completion Status
+ * Only allows modification of todos belonging to the same device
+ * Provides security through device ID verification
  */
 export const toggleTodo = mutation({
-    // Input validation: requires a valid todo ID
-    args: { id: v.id('todos') },
+    args: { 
+        id: v.id('todos'),
+        deviceId: v.string() // Required for authorization
+    },
     handler: async (ctx, args) => {
-        // First, retrieve the todo to check if it exists and get current status
-        const todo = await ctx.db.get(args.id);
-        
-        // Error handling: throw custom error if todo doesn't exist
-        if (!todo) {
-            throw new ConvexError('Todo not found');
+        // Validate device ID
+        if (!args.deviceId) {
+            throw new ConvexError('Device ID is required for authorization');
         }
-        
-        // Update the todo's completion status to the opposite of current state
-        await ctx.db.patch(args.id, { isCompleted: !todo.isCompleted });
+
+        try {
+            // Get the todo and verify it exists
+            const todo = await ctx.db.get(args.id);
+            
+            if (!todo) {
+                throw new ConvexError('Todo not found');
+            }
+
+            // Critical security check: Verify the todo belongs to the requesting device
+            if (todo.deviceId !== args.deviceId) {
+                throw new ConvexError('Not authorized: Todo belongs to a different device');
+            }
+            
+            // Update the todo's completion status
+            await ctx.db.patch(args.id, { 
+                isCompleted: !todo.isCompleted 
+            });
+
+            return { success: true, newStatus: !todo.isCompleted };
+        } catch (error) {
+            console.error('Error toggling todo for device:', args.deviceId, error);
+            if (error instanceof ConvexError) {
+                throw error; // Re-throw ConvexErrors as-is
+            }
+            throw new ConvexError('Failed to toggle todo');
+        }
     },
 });
 
 /**
- * Mutation: Delete Todo
- * Permanently removes a todo item from the database
- * Simple deletion without confirmation (confirmation handled in UI)
+ * Mutation: Delete Device's Todo
+ * Only allows deletion of todos belonging to the same device
+ * Includes comprehensive authorization checks
  */
 export const deleteTodo = mutation({
-    // Input validation: requires a valid todo ID
-    args: { id: v.id('todos') },
+    args: { 
+        id: v.id('todos'),
+        deviceId: v.string() // Required for authorization
+    },
     handler: async (ctx, args) => {
-        // Delete the todo from the database using its ID
-        await ctx.db.delete(args.id);
+        // Validate device ID
+        if (!args.deviceId) {
+            throw new ConvexError('Device ID is required for authorization');
+        }
+
+        try {
+            // Get the todo and verify it exists
+            const todo = await ctx.db.get(args.id);
+            
+            if (!todo) {
+                throw new ConvexError('Todo not found or already deleted');
+            }
+
+            // Critical security check: Verify the todo belongs to the requesting device
+            if (todo.deviceId !== args.deviceId) {
+                throw new ConvexError('Not authorized: Todo belongs to a different device');
+            }
+
+            // Delete the todo
+            await ctx.db.delete(args.id);
+
+            return { success: true, deletedTodoId: args.id };
+        } catch (error) {
+            console.error('Error deleting todo for device:', args.deviceId, error);
+            if (error instanceof ConvexError) {
+                throw error; // Re-throw ConvexErrors as-is
+            }
+            throw new ConvexError('Failed to delete todo');
+        }
     },
 });
 
 /**
- * Mutation: Update Todo Text
- * Modifies the text content of an existing todo item
- * Used for inline editing functionality in the UI
+ * Mutation: Update Device's Todo Text
+ * Only allows updating todos belonging to the same device
+ * Validates both authorization and input data
  */
 export const updateTodo = mutation({
-    // Input validation: requires todo ID and new text content
-    args: { id: v.id('todos'), text: v.string() },
+    args: { 
+        id: v.id('todos'), 
+        text: v.string(),
+        deviceId: v.string() // Required for authorization
+    },
     handler: async (ctx, args) => {
-        // Update only the text field of the specified todo
-        await ctx.db.patch(args.id, { text: args.text });
+        // Validate input text
+        if (!args.text.trim()) {
+            throw new ConvexError('Todo text cannot be empty');
+        }
+
+        // Validate device ID
+        if (!args.deviceId) {
+            throw new ConvexError('Device ID is required for authorization');
+        }
+
+        try {
+            // Get the todo and verify it exists
+            const todo = await ctx.db.get(args.id);
+            
+            if (!todo) {
+                throw new ConvexError('Todo not found');
+            }
+
+            // Critical security check: Verify the todo belongs to the requesting device
+            if (todo.deviceId !== args.deviceId) {
+                throw new ConvexError('Not authorized: Todo belongs to a different device');
+            }
+
+            // Update the todo text
+            await ctx.db.patch(args.id, { 
+                text: args.text.trim() 
+            });
+
+            return { success: true, updatedText: args.text.trim() };
+        } catch (error) {
+            console.error('Error updating todo for device:', args.deviceId, error);
+            if (error instanceof ConvexError) {
+                throw error; // Re-throw ConvexErrors as-is
+            }
+            throw new ConvexError('Failed to update todo');
+        }
     },
 });
 
 /**
- * Mutation: Clear All Todos (Danger Zone Operation)
- * Removes all todo items from the database
- * Returns count of deleted items for user feedback
- * Used in settings "Danger Zone" for bulk operations
+ * Mutation: Clear All Device's Todos (Device-Specific Danger Zone)
+ * Only deletes todos belonging to the current device
+ * Provides bulk deletion with device isolation
  */
 export const clearAllTodos = mutation({
-    handler: async (ctx) => {
-        // First, get all todos to count them before deletion
-        const todos = await ctx.db.query('todos').collect();
-        
-        // Delete each todo individually (Convex doesn't support bulk delete)
-        for (const todo of todos) {
-            await ctx.db.delete(todo._id);
+    args: { deviceId: v.string() }, // Required for device identification
+    handler: async (ctx, args) => {
+        // Validate device ID
+        if (!args.deviceId) {
+            throw new ConvexError('Device ID is required');
         }
-        
-        // Return count of deleted items for user feedback
-        return { deletedCount: todos.length };
+
+        try {
+            // Get only the todos belonging to this specific device
+            const deviceTodos = await ctx.db
+                .query('todos')
+                .withIndex("by_device", (q) => q.eq("deviceId", args.deviceId))
+                .collect();
+            
+            // Delete each todo belonging to the device
+            for (const todo of deviceTodos) {
+                await ctx.db.delete(todo._id);
+            }
+            
+            // Return detailed result for user feedback
+            return { 
+                success: true, 
+                deletedCount: deviceTodos.length,
+                deviceId: args.deviceId 
+            };
+        } catch (error) {
+            console.error('Error clearing todos for device:', args.deviceId, error);
+            throw new ConvexError('Failed to clear todos');
+        }
+    },
+});
+
+/**
+ * Query: Get Device Statistics
+ * Provides summary statistics for a specific device's todos
+ * Useful for dashboard and progress tracking
+ */
+export const getDeviceStats = query({
+    args: { deviceId: v.optional(v.string()) },
+    handler: async (ctx, args) => {
+        // Return default stats if no device ID provided
+/*         if (!args.deviceId) {
+            return {
+                total: 0,
+                completed: 0,
+                pending: 0,
+                completionRate: 0
+            };
+        } */
+
+        try {
+            // Get all todos for this device
+            const todos = await ctx.db
+                .query('todos')
+                .withIndex("by_device", (q) => q.eq("deviceId", args.deviceId as string))
+                .collect();
+
+            const total = todos.length;
+            const completed = todos.filter(todo => todo.isCompleted).length;
+            const pending = total - completed;
+            const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            return {
+                total,
+                completed,
+                pending,
+                completionRate,
+                deviceId: args.deviceId
+            };
+        } catch (error) {
+            console.error('Error getting stats for device:', args.deviceId, error);
+            throw new ConvexError('Failed to get device statistics');
+        }
     },
 });
 

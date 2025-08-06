@@ -1,14 +1,9 @@
-// Import styles for settings screen components
-import { createSettingsStyles } from '@/assets/styles/settings.styles';
-// Import custom theme hook for theme management
-import useTheme from '@/hooks/useTheme';
-// Import Ionicons for consistent iconography
-import { Ionicons } from '@expo/vector-icons';
-// Import LinearGradient for modern visual styling
-import { LinearGradient } from 'expo-linear-gradient';
+import { createSettingsStyles } from '@/assets/styles/settings.styles'; // Import styles for settings screen components
+import useTheme from '@/hooks/useTheme'; // Import custom theme hook for theme management
+import { Ionicons } from '@expo/vector-icons'; // Import Ionicons for consistent iconography
+import { LinearGradient } from 'expo-linear-gradient'; // Import LinearGradient for modern visual styling
 import React, { useState } from 'react';
-// Import React Native components for UI structure
-import { Switch, Text, View } from 'react-native';
+import { Switch, Text, View } from 'react-native'; // Import React Native components for UI structure
 
 /**
  * Preferences Component
