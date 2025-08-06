@@ -269,14 +269,6 @@ export const getDeviceStats = query({
 
         try {
             // Get all todos for this device
-            if (!args.deviceId) {
-                return {
-                    total: 0,
-                    completed: 0,
-                    pending: 0,
-                    completionRate: 0
-                };
-            }
             const todos = await ctx.db
                 .query('todos')
                 .withIndex("by_device", (q) => q.eq("deviceId", args.deviceId as string))
