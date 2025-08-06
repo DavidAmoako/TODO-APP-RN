@@ -6,6 +6,7 @@ import React from 'react';
 
 const TabsLayout = () => {
     const {colors} = useTheme();
+    
   return (
     <Tabs
       screenOptions={{
