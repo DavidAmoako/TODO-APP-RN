@@ -220,7 +220,7 @@ export const createSettingsStyles = (colors: ColorScheme) => {
     },
     summarySubtext: {
       fontSize: 11,
-      color: colors.textMuted,
+      color: colors.warning,
       textAlign: "center",
       marginTop: 4,
     },

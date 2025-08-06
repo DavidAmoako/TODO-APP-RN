@@ -1,20 +1,12 @@
-// Import styles for settings screen components
-import { createSettingsStyles } from '@/assets/styles/settings.styles';
-// Import Convex API for real-time database operations
-import { api } from '@/convex/_generated/api';
-// Import device ID hook for user-specific data
-import useDeviceId from '@/hooks/useDeviceId';
-// Import custom theme hook for consistent styling
-import useTheme from '@/hooks/useTheme';
-// Import Ionicons for consistent iconography
-import { Ionicons } from '@expo/vector-icons';
-// Import Convex query hook for real-time data fetching
-import { useQuery } from 'convex/react';
-// Import LinearGradient for modern visual styling
-import { LinearGradient } from 'expo-linear-gradient';
+import { createSettingsStyles } from '@/assets/styles/settings.styles'; // Import styles for settings screen components
+import { api } from '@/convex/_generated/api'; // Import Convex API for real-time database operations
+import useDeviceId from '@/hooks/useDeviceId'; // Import device ID hook for user-specific data
+import useTheme from '@/hooks/useTheme'; // Import custom theme hook for consistent styling
+import { Ionicons } from '@expo/vector-icons'; // Import Ionicons for consistent iconography
+import { useQuery } from 'convex/react'; // Import Convex query hook for real-time data fetching
+import { LinearGradient } from 'expo-linear-gradient'; // Import LinearGradient for modern visual styling
 import React from 'react';
-// Import React Native components for UI structure
-import { Text, View } from 'react-native';
+import { Text, View } from 'react-native'; // Import React Native components for UI structure
 
 /**
  * ProgressStats Component
@@ -47,14 +39,14 @@ const ProgressStats = () => {
     const completionRate = totalTodos > 0 ? Math.round((completedTodos / totalTodos) * 100) : 0;
 
     // Determine productivity status based on completion rate
-    const getProductivityStatus = () => {
+/*     const getProductivityStatus = () => {
         if (totalTodos === 0) return "Ready to start!";
         if (completionRate === 100) return "All caught up! 🎉";
         if (completionRate >= 75) return "Great progress! 💪";
         if (completionRate >= 50) return "Halfway there! 🚀";
         if (completionRate >= 25) return "Good start! ⭐";
         return "Just getting started! 💼";
-    };
+    }; */
 
     return (
         // Section container with surface gradient for visual depth
@@ -63,9 +55,9 @@ const ProgressStats = () => {
             <Text style={settingStyles.sectionTitle}>Progress Stats</Text>
 
             {/* Productivity status message */}
-            <Text style={settingStyles.productivityStatus}>
+{/*             <Text style={settingStyles.productivityStatus}>
                 {getProductivityStatus()}
-            </Text>
+            </Text> */}
 
             {/* Statistics cards container - displays metrics in a grid layout */}
             <View style={settingStyles.statsContainer}>
@@ -125,7 +117,7 @@ const ProgressStats = () => {
                             <Ionicons name="time" size={20} color="#fff" />  {/* Clock icon for pending tasks */}
                         </LinearGradient>
                     </View>
-
+                        
                     {/* Active todos count and label */}
                     <View style={settingStyles.statContent}>
                         <Text style={settingStyles.statNumber}>{pendingTodos}</Text>
@@ -141,7 +133,7 @@ const ProgressStats = () => {
             </View>
 
             {/* Summary section with additional insights */}
-            {totalTodos > 0 && (
+            {/* {totalTodos > 0 && (
                 <View style={settingStyles.summaryContainer}>
                     <Text style={settingStyles.summaryText}>
                         You&apos;ve completed {completedTodos} out of {totalTodos} tasks ({completionRate}%)
@@ -152,16 +144,16 @@ const ProgressStats = () => {
                         </Text>
                     )}
                 </View>
-            )}
+            )} */}
 
             {/* Empty state message when no todos exist */}
-            {totalTodos === 0 && (
+            {/* {totalTodos === 0 && (
                 <View style={settingStyles.emptyStatsContainer}>
                     <Text style={settingStyles.emptyStatsText}>
                         No todos yet! Add your first task to see your progress here.
                     </Text>
                 </View>
-            )}
+            )} */}
         </LinearGradient>
     )
 }

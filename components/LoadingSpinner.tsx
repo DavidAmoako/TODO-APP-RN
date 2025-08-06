@@ -1,11 +1,7 @@
-// Import styles for home screen components
-import { createHomeStyles } from "@/assets/styles/home.styles";
-// Import custom theme hook for consistent styling
-import useTheme from "@/hooks/useTheme";
-// Import LinearGradient for modern visual styling
-import { LinearGradient } from "expo-linear-gradient";
-// Import React Native components for loading UI
-import { ActivityIndicator, Text, View } from "react-native";
+import { createHomeStyles } from "@/assets/styles/home.styles"; // Import styles for home screen components
+import useTheme from "@/hooks/useTheme"; // Import custom theme hook for consistent styling
+import { LinearGradient } from "expo-linear-gradient"; // Import LinearGradient for modern visual styling
+import { ActivityIndicator, Text, View } from "react-native"; // Import React Native components for loading UI
 
 /**
  * LoadingSpinner Component

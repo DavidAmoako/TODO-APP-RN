@@ -158,11 +158,11 @@ const DangerZone = () => {
             </TouchableOpacity>
 
             {/* Device information for transparency */}
-            {deviceId && (
+{/*             {deviceId && (
                 <Text style={settingStyles.deviceInfo}>
                     This will only affect data on this device
                 </Text>
-            )}
+            )} */}
         </LinearGradient>
     );
 };
