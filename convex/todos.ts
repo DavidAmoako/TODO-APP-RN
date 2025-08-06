@@ -258,14 +258,14 @@ export const getDeviceStats = query({
     args: { deviceId: v.optional(v.string()) },
     handler: async (ctx, args) => {
         // Return default stats if no device ID provided
-        if (!args.deviceId) {
+/*         if (!args.deviceId) {
             return {
                 total: 0,
                 completed: 0,
                 pending: 0,
                 completionRate: 0
             };
-        }
+        } */
 
         try {
             // Get all todos for this device
