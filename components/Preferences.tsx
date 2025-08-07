@@ -2,7 +2,7 @@ import { createSettingsStyles } from '@/assets/styles/settings.styles'; // Impor
 import useTheme from '@/hooks/useTheme'; // Import custom theme hook for theme management
 import { Ionicons } from '@expo/vector-icons'; // Import Ionicons for consistent iconography
 import { LinearGradient } from 'expo-linear-gradient'; // Import LinearGradient for modern visual styling
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Switch, Text, View } from 'react-native'; // Import React Native components for UI structure
 
 /**
@@ -92,7 +92,7 @@ const Preferences = () => {
             </View>
 
         </LinearGradient>
-    )
-}
+    );
+};
 
-export default Preferences
+export default Preferences;

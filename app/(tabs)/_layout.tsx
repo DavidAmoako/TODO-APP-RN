@@ -27,20 +27,24 @@ const TabsLayout = () => {
         headerShown: false,
       }}
     >
-        <Tabs.Screen 
-        name="index" 
-        options={{ 
-            title: 'Todos',
-            tabBarIcon: ({ color, size }) => (<Ionicons name="flash-outline" size={size} color={color} />)
-        }} />
-        <Tabs.Screen 
+      <Tabs.Screen 
+      name="index" 
+      options={{ 
+          title: 'Todos',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="flash-outline" size={size} color={color} />
+          ),
+        }} 
+      />
+      <Tabs.Screen 
         name="settings" 
         options={{ 
             title: 'Settings',
-            tabBarIcon: ({ color, size }) => (<Ionicons name="settings" size={size} color={color} />)
-        }} />
+            tabBarIcon: ({ color, size }) => <Ionicons name="settings" size={size} color={color} />,
+        }} 
+      />
     </Tabs>
-  )
-}
+  );
+};
 
-export default TabsLayout
+export default TabsLayout;

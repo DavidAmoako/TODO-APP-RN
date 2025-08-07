@@ -5,8 +5,8 @@ import useTheme from '@/hooks/useTheme';
 import { Ionicons } from '@expo/vector-icons';
 import { useMutation } from 'convex/react';
 import { LinearGradient } from 'expo-linear-gradient';
-import React from 'react';
-import { Alert, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useState } from 'react';
+import { Alert, Keyboard, TextInput, TouchableOpacity, View } from 'react-native';
 
 /**
  * TodoInput Component
@@ -25,8 +25,8 @@ const TodoInput = () => {
     const homeStyles = createHomeStyles(colors);
     
     // State management for todo input and loading states
-    const [newTodo, setNewTodo] = React.useState('');
-    const [isSubmitting, setIsSubmitting] = React.useState(false);
+    const [newTodo, setNewTodo] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
     
     // Convex mutation hook for adding todos to the database
     const addTodo = useMutation(api.todos.addTodo);
@@ -138,13 +138,6 @@ const TodoInput = () => {
                     autoCapitalize="sentences" // Capitalize first letter of sentences
                 />
                 
-                {/* Character count indicator (optional, can be removed) */}
-                {newTodo.length > 150 && (
-                    <Text style={homeStyles.characterCount}>
-                        {newTodo.length}/200
-                    </Text>
-                )}
-                
                 {/* Add button with loading and disabled states */}
                 <TouchableOpacity 
                     onPress={handleAddTodo} 
@@ -168,15 +161,8 @@ const TodoInput = () => {
                     </LinearGradient>
                 </TouchableOpacity>
             </View>
-
-            {/* Device status indicator (for debugging, can be removed in production) */}
-            {!deviceId && !deviceIdLoading && (
-                <Text style={homeStyles.deviceStatusError}>
-                    Device not ready. Please wait...
-                </Text>
-            )}
         </View>
-    )
-}
+    );
+};
 
-export default TodoInput
+export default TodoInput;

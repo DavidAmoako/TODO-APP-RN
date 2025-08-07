@@ -5,7 +5,6 @@ import useTheme from '@/hooks/useTheme';
 import { Ionicons } from '@expo/vector-icons';
 import { useMutation } from 'convex/react';
 import { LinearGradient } from 'expo-linear-gradient';
-import React from 'react';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
 
 /**
@@ -156,15 +155,8 @@ const DangerZone = () => {
                     color={deviceId ? colors.textMuted : colors.border} 
                 />
             </TouchableOpacity>
-
-            {/* Device information for transparency */}
-{/*             {deviceId && (
-                <Text style={settingStyles.deviceInfo}>
-                    This will only affect data on this device
-                </Text>
-            )} */}
         </LinearGradient>
     );
 };
 
-export default DangerZone
+export default DangerZone;

@@ -8,7 +8,7 @@ import { api } from "@/convex/_generated/api";
 import { Doc, Id } from "@/convex/_generated/dataModel";
 import useDeviceId from "@/hooks/useDeviceId"; // Import device ID hook
 import useTheme from "@/hooks/useTheme";
-import Ionicons from "@expo/vector-icons/build/Ionicons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useMutation, useQuery } from "convex/react";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
@@ -68,7 +68,7 @@ export default function Index() {
   const handleDeleteTodo = async(id: Id<"todos">) => {
       Alert.alert("Delete Todo", "Are you sure you want to delete this todo?", [
         { text: "Cancel", style: "cancel"},
-        { text: "Delete", style: "destructive", onPress: () => deleteTodo({id, deviceId}),},
+        { text: "Delete", style: "destructive", onPress: () => deleteTodo({id, deviceId}) },
       ]);
   };
 
@@ -144,13 +144,13 @@ export default function Index() {
             // Edit mode: Shows text input and save/cancel buttons
             <View style={homeStyles.editContainer}>
               <TextInput
+                style={homeStyles.editInput}
                 value={editText}
                 onChangeText={setEditText}
-                onSubmitEditing={handleSaveEdit} // Save on keyboard submit
-                style={homeStyles.editInput}
-                placeholder="Edit todo..."
                 autoFocus // Automatically focus when entering edit mode
                 multiline // Allow multiple lines for longer todos
+                //onSubmitEditing={handleSaveEdit} // Save on keyboard submit
+                placeholder="Edit todo..."
                 placeholderTextColor={colors.textMuted}
               />
               <View style={homeStyles.editButtons}>
@@ -175,8 +175,7 @@ export default function Index() {
             // Display mode: Shows todo text and action buttons
             <View style = {homeStyles.todoTextContainer}>
               {/* Todo text with strikethrough effect for completed items */}
-              <Text
-                style={[
+              <Text style={[
                   homeStyles.todoText,
                   item.isCompleted && {
                     textDecorationLine: "line-through",
@@ -184,9 +183,7 @@ export default function Index() {
                     opacity: 0.6,
                   },
                 ]}
-              >
-                {item.text}
-              </Text>
+              >{item.text}</Text>
 
               {/* Action buttons: Edit and Delete */}
               <View style={homeStyles.todoActions}>
@@ -228,8 +225,8 @@ export default function Index() {
         {/* List of todos with efficient rendering via FlatList */}
         <FlatList
           data={todos} // Todo items array from Convex database
-          keyExtractor={(item) => item._id} // Unique key for each item
           renderItem={renderTodoItem} // Render function for each todo
+          keyExtractor={(item) => item._id} // Unique key for each item
           style={homeStyles.todoList}
           contentContainerStyle={homeStyles.todoListContent}
           ListEmptyComponent={<EmptyState />} // Show when no todos exist

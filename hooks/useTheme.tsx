@@ -194,6 +194,6 @@ const useTheme = () => {
     }
     
     return context;
-}
+};
 
-export default useTheme
+export default useTheme;

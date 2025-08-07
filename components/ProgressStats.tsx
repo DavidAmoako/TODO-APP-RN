@@ -5,7 +5,6 @@ import useTheme from '@/hooks/useTheme'; // Import custom theme hook for consist
 import { Ionicons } from '@expo/vector-icons'; // Import Ionicons for consistent iconography
 import { useQuery } from 'convex/react'; // Import Convex query hook for real-time data fetching
 import { LinearGradient } from 'expo-linear-gradient'; // Import LinearGradient for modern visual styling
-import React from 'react';
 import { Text, View } from 'react-native'; // Import React Native components for UI structure
 
 /**
@@ -35,29 +34,12 @@ const ProgressStats = () => {
     const completedTodos = todos ? todos.filter((todo) => todo.isCompleted).length : 0;  // Completed todos count
     const pendingTodos = totalTodos - completedTodos;                               // Active/pending todos count
 
-    // Calculate completion percentage for additional insights
-    const completionRate = totalTodos > 0 ? Math.round((completedTodos / totalTodos) * 100) : 0;
-
-    // Determine productivity status based on completion rate
-/*     const getProductivityStatus = () => {
-        if (totalTodos === 0) return "Ready to start!";
-        if (completionRate === 100) return "All caught up! 🎉";
-        if (completionRate >= 75) return "Great progress! 💪";
-        if (completionRate >= 50) return "Halfway there! 🚀";
-        if (completionRate >= 25) return "Good start! ⭐";
-        return "Just getting started! 💼";
-    }; */
-
+    
     return (
         // Section container with surface gradient for visual depth
         <LinearGradient colors={colors.gradients.surface} style={settingStyles.section}>
             {/* Section title */}
             <Text style={settingStyles.sectionTitle}>Progress Stats</Text>
-
-            {/* Productivity status message */}
-{/*             <Text style={settingStyles.productivityStatus}>
-                {getProductivityStatus()}
-            </Text> */}
 
             {/* Statistics cards container - displays metrics in a grid layout */}
             <View style={settingStyles.statsContainer}>
@@ -97,12 +79,6 @@ const ProgressStats = () => {
                     <View style={settingStyles.statContent}>
                         <Text style={settingStyles.statNumber}>{completedTodos}</Text>
                         <Text style={settingStyles.statLabel}>Completed</Text>
-                        {/* Show completion percentage if there are todos */}
-                        {totalTodos > 0 && (
-                            <Text style={settingStyles.statPercentage}>
-                                {completionRate}%
-                            </Text>
-                        )}
                     </View>
                 </LinearGradient>
 
@@ -122,40 +98,11 @@ const ProgressStats = () => {
                     <View style={settingStyles.statContent}>
                         <Text style={settingStyles.statNumber}>{pendingTodos}</Text>
                         <Text style={settingStyles.statLabel}>Pending</Text>  {/* Clear labeling for remaining tasks */}
-                        {/* Show remaining percentage if there are todos */}
-                        {totalTodos > 0 && pendingTodos > 0 && (
-                            <Text style={settingStyles.statPercentage}>
-                                {100 - completionRate}% left
-                            </Text>
-                        )}
                     </View>
                 </LinearGradient>
             </View>
-
-            {/* Summary section with additional insights */}
-            {/* {totalTodos > 0 && (
-                <View style={settingStyles.summaryContainer}>
-                    <Text style={settingStyles.summaryText}>
-                        You&apos;ve completed {completedTodos} out of {totalTodos} tasks ({completionRate}%)
-                    </Text>
-                    {pendingTodos > 0 && (
-                        <Text style={settingStyles.summarySubtext}>
-                            {pendingTodos} task{pendingTodos === 1 ? "" : "s"} remaining to finish
-                        </Text>
-                    )}
-                </View>
-            )} */}
-
-            {/* Empty state message when no todos exist */}
-            {/* {totalTodos === 0 && (
-                <View style={settingStyles.emptyStatsContainer}>
-                    <Text style={settingStyles.emptyStatsText}>
-                        No todos yet! Add your first task to see your progress here.
-                    </Text>
-                </View>
-            )} */}
         </LinearGradient>
-    )
-}
+    );
+};
 
-export default ProgressStats
+export default ProgressStats;
