@@ -1,6 +1,6 @@
 import { createSettingsStyles } from '@/assets/styles/settings.styles';
 import { api } from '@/convex/_generated/api';
-import useDeviceId from '@/hooks/useDeviceId'; // Import device ID hook
+import useDeviceId from '@/hooks/useDeviceId';
 import useTheme from '@/hooks/useTheme';
 import { Ionicons } from '@expo/vector-icons';
 import { useMutation } from 'convex/react';
@@ -101,30 +101,23 @@ const DangerZone = () => {
     };
 
     return (
-        // Section container with surface gradient for visual depth
         <LinearGradient colors={colors.gradients.surface} style={settingStyles.section}>
-            {/* Section title with danger styling to indicate risk */}
             <Text style={settingStyles.sectionTitleDanger}>Danger Zone</Text>
-            
-            {/* Warning message about the destructive nature of actions */}
             <Text style={settingStyles.dangerWarning}>
                 Actions in this section are permanent and cannot be undone. Proceed with caution.
             </Text>
             
-            {/* Reset app button with warning visual indicators */}
             <TouchableOpacity
                 style={[
                     settingStyles.actionButton, 
                     { borderBottomWidth: 0 },
-                    !deviceId && settingStyles.actionButtonDisabled // Disable if no device ID
+                    !deviceId && settingStyles.actionButtonDisabled 
                 ]}
                 onPress={handleResetApp}
-                activeOpacity={0.7} // Visual feedback on press
-                disabled={!deviceId} // Disable button if device ID is not available
+                activeOpacity={0.7} 
+                disabled={!deviceId}
             >
-                {/* Left side: Icon and text */}
                 <View style={settingStyles.actionLeft}>
-                    {/* Danger-colored icon container */}
                     <LinearGradient 
                         colors={deviceId ? colors.gradients.danger : colors.gradients.muted} 
                         style={settingStyles.actionIcon}
@@ -132,23 +125,19 @@ const DangerZone = () => {
                         <Ionicons name="trash" size={18} color="#fff" />
                     </LinearGradient>
                     
-                    {/* Action text and description */}
                     <View style={settingStyles.actionTextContainer}>
-                        {/* Action title styled with danger colors */}
                         <Text style={[
                             settingStyles.actionTextDanger,
                             !deviceId && settingStyles.actionTextDisabled
                         ]}>
                             Reset App
                         </Text>
-                        {/* Descriptive subtitle */}
                         <Text style={settingStyles.actionSubtext}>
                             Delete all todos from this device
                         </Text>
                     </View>
                 </View>
                 
-                {/* Right side: Chevron indicator */}
                 <Ionicons 
                     name="chevron-forward" 
                     size={18} 

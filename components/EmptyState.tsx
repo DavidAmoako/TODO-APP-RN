@@ -1,8 +1,8 @@
-import { createHomeStyles } from "@/assets/styles/home.styles"; // Import styles for home screen components
-import useTheme from "@/hooks/useTheme"; // Import custom theme hook for consistent styling
-import { Ionicons } from "@expo/vector-icons"; // Import Ionicons for consistent iconography
-import { LinearGradient } from "expo-linear-gradient"; // Import LinearGradient for modern visual styling
-import { Text, View } from "react-native"; // Import React Native components for UI structure
+import { createHomeStyles } from "@/assets/styles/home.styles";
+import useTheme from "@/hooks/useTheme";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { Text, View } from "react-native";
 
 /**
  * EmptyState Component
@@ -18,25 +18,20 @@ const EmptyState = () => {
     const homeStyles = createHomeStyles(colors);
 
     return (
-        // Main container for the empty state message
         <View style={homeStyles.emptyContainer}>
-            {/* Icon container with gradient background for visual appeal */}
             <LinearGradient 
                 colors={colors.gradients.empty} 
                 style={homeStyles.emptyIconContainer}
             >
-                {/* Clipboard icon to represent todo lists / tasks */}
                 <Ionicons 
                     name="clipboard-outline" 
                     size={60} 
                     color={colors.textMuted} 
                 />
             </LinearGradient>
-            
-            {/* Primary empty state message - encourages user to start adding todos */}
+    
             <Text style={homeStyles.emptyText}>No todos yet!</Text>
             
-            {/* Secondary message providing clear guidance on next steps */}
             <Text style={homeStyles.emptySubtext}>
                 Add your first todo above to get started
             </Text>

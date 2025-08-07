@@ -1,6 +1,6 @@
 import { createHomeStyles } from '@/assets/styles/home.styles';
 import { api } from '@/convex/_generated/api';
-import useDeviceId from '@/hooks/useDeviceId'; // Import device ID hook
+import useDeviceId from '@/hooks/useDeviceId';
 import useTheme from '@/hooks/useTheme';
 import { Ionicons } from '@expo/vector-icons';
 import { useQuery } from 'convex/react';
@@ -37,43 +37,30 @@ const Header = () => {
     const progress = totalTodos > 0 ? (completedTodos / totalTodos) * 100 : 0;
 
     return (
-        // Main header container
         <View style={homeStyles.header}>
-            {/* Title section with app branding and task summary */}
             <View style={homeStyles.titleContainer}>
-                {/* App icon with primary gradient background */}
                 <LinearGradient colors={colors.gradients.primary} style={homeStyles.iconContainer}>
-                    {/* Lightning bolt icon suggests speed and productivity */}
                     <Ionicons name="flash-outline" size={28} color="#fff" />
                 </LinearGradient>
 
-                {/* Title and subtitle text container */}
                 <View style={homeStyles.titleTextContainer}>
-                    {/* Main app title with motivational emoji */}
                     <Text style={homeStyles.title}>Today&apos;s Tasks 👀</Text>
                     
-                    {/* Dynamic subtitle showing detailed completion status */}
-                    {/* Updates in real-time as todos are completed, added, or deleted */}
                     <Text style={homeStyles.subtitle}>{completedTodos} of {totalTodos} completed</Text>             
                 </View>
             </View>
 
-            {/* Progress tracking section */}
             <View style={homeStyles.progressContainer}>
                 <View style={homeStyles.progressBarContainer}>
-                    {/* Progress bar with dynamic fill based on completion percentage */}
                     <View style={homeStyles.progressBar}>
-                        {/* Animated progress fill with success gradient */}
-                        {/* Only show progress fill if there are todos to avoid empty bar */}
-                        {totalTodos > 0 && (
+                        {(totalTodos > 0) && (
                             <LinearGradient
                                 colors={colors.gradients.success}
                                 style={[homeStyles.progressFill, { width: `${progress}%` }]} 
-                            />// Dynamic width based on completion percentage
+                            />
                         )}
                     </View>
                     
-                    {/* Percentage text display with conditional formatting */}
                     <Text style={homeStyles.progressText}>{totalTodos > 0 ? `${Math.round(progress)}%` : '0%'}</Text>
                 </View>
 

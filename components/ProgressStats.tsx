@@ -1,11 +1,11 @@
-import { createSettingsStyles } from '@/assets/styles/settings.styles'; // Import styles for settings screen components
-import { api } from '@/convex/_generated/api'; // Import Convex API for real-time database operations
-import useDeviceId from '@/hooks/useDeviceId'; // Import device ID hook for user-specific data
-import useTheme from '@/hooks/useTheme'; // Import custom theme hook for consistent styling
-import { Ionicons } from '@expo/vector-icons'; // Import Ionicons for consistent iconography
-import { useQuery } from 'convex/react'; // Import Convex query hook for real-time data fetching
-import { LinearGradient } from 'expo-linear-gradient'; // Import LinearGradient for modern visual styling
-import { Text, View } from 'react-native'; // Import React Native components for UI structure
+import { createSettingsStyles } from '@/assets/styles/settings.styles';
+import { api } from '@/convex/_generated/api';
+import useDeviceId from '@/hooks/useDeviceId';
+import useTheme from '@/hooks/useTheme';
+import { Ionicons } from '@expo/vector-icons';
+import { useQuery } from 'convex/react';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Text, View } from 'react-native';
 
 /**
  * ProgressStats Component
@@ -30,74 +30,60 @@ const ProgressStats = () => {
     const todos = useQuery(api.todos.getTodos, { deviceId: deviceId ?? undefined });
     
     // Calculate statistics with comprehensive null safety for loading states
-    const totalTodos = todos ? todos.length : 0;                                    // Total number of todos for this device
-    const completedTodos = todos ? todos.filter((todo) => todo.isCompleted).length : 0;  // Completed todos count
-    const pendingTodos = totalTodos - completedTodos;                               // Active/pending todos count
+    const totalTodos = todos ? todos.length : 0;                                    
+    const completedTodos = todos ? todos.filter((todo) => todo.isCompleted).length : 0; 
+    const pendingTodos = totalTodos - completedTodos;                              
 
     
     return (
-        // Section container with surface gradient for visual depth
         <LinearGradient colors={colors.gradients.surface} style={settingStyles.section}>
-            {/* Section title */}
             <Text style={settingStyles.sectionTitle}>Progress Stats</Text>
-
-            {/* Statistics cards container - displays metrics in a grid layout */}
             <View style={settingStyles.statsContainer}>
-
-                {/* Total Todos Statistics Card */}
                 <LinearGradient
-                    colors={colors.gradients.background}    // Background gradient for card depth
-                    style={[settingStyles.statCard, { borderLeftColor: colors.primary }]}  // Primary accent border
+                    colors={colors.gradients.background}    
+                    style={[settingStyles.statCard, { borderLeftColor: colors.primary }]}  
                 >
-                    {/* Icon container with gradient background */}
                     <View style={settingStyles.statIconContainer}>
                         <LinearGradient colors={colors.gradients.primary} style={settingStyles.statIcon}>
-                            <Ionicons name="list" size={20} color="#fff" />  {/* List icon represents all todos */}
+                            <Ionicons name="list" size={20} color="#fff" />  
                         </LinearGradient>
                     </View>
 
-                    {/* Statistics content - number and label */}
                     <View style={settingStyles.statContent}>
-                        <Text style={settingStyles.statNumber}>{totalTodos}</Text>  {/* Large number display */}
-                        <Text style={settingStyles.statLabel}>Total Todos</Text>    {/* Descriptive label */}
+                        <Text style={settingStyles.statNumber}>{totalTodos}</Text> 
+                        <Text style={settingStyles.statLabel}>Total Todos</Text>   
                     </View>
                 </LinearGradient>
 
-                {/* Completed Todos Statistics Card */}
                 <LinearGradient
                     colors={colors.gradients.background}
-                    style={[settingStyles.statCard, { borderLeftColor: colors.success }]}  // Success green accent
+                    style={[settingStyles.statCard, { borderLeftColor: colors.success }]}  
                 >
-                    {/* Success-themed icon container */}
                     <View style={settingStyles.statIconContainer}>
                         <LinearGradient colors={colors.gradients.success} style={settingStyles.statIcon}>
-                            <Ionicons name="checkmark-circle" size={20} color="#fff" />  {/* Checkmark for completion */}
+                            <Ionicons name="checkmark-circle" size={20} color="#fff" />  
                         </LinearGradient>
                     </View>
 
-                    {/* Completed todos count and label */}
                     <View style={settingStyles.statContent}>
                         <Text style={settingStyles.statNumber}>{completedTodos}</Text>
                         <Text style={settingStyles.statLabel}>Completed</Text>
                     </View>
                 </LinearGradient>
 
-                {/* Active/Pending Todos Statistics Card */}
                 <LinearGradient
                     colors={colors.gradients.background}
-                    style={[settingStyles.statCard, { borderLeftColor: colors.warning }]}  // Warning orange accent
+                    style={[settingStyles.statCard, { borderLeftColor: colors.warning }]}  
                 >
-                    {/* Warning-themed icon container */}
                     <View style={settingStyles.statIconContainer}>
                         <LinearGradient colors={colors.gradients.warning} style={settingStyles.statIcon}>
-                            <Ionicons name="time" size={20} color="#fff" />  {/* Clock icon for pending tasks */}
+                            <Ionicons name="time" size={20} color="#fff" /> 
                         </LinearGradient>
                     </View>
                         
-                    {/* Active todos count and label */}
                     <View style={settingStyles.statContent}>
                         <Text style={settingStyles.statNumber}>{pendingTodos}</Text>
-                        <Text style={settingStyles.statLabel}>Pending</Text>  {/* Clear labeling for remaining tasks */}
+                        <Text style={settingStyles.statLabel}>Pending</Text> 
                     </View>
                 </LinearGradient>
             </View>

@@ -1,6 +1,4 @@
-// Import AsyncStorage for persistent theme preference storage
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// Import React utilities for context management and state handling
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 /**

@@ -1,4 +1,3 @@
-// Import necessary components and utilities for the TODO app
 import { createHomeStyles } from "@/assets/styles/home.styles";
 import EmptyState from "@/components/EmptyState";
 import Header from "@/components/Header";
@@ -6,7 +5,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import TodoInput from "@/components/TodoInput";
 import { api } from "@/convex/_generated/api";
 import { Doc, Id } from "@/convex/_generated/dataModel";
-import useDeviceId from "@/hooks/useDeviceId"; // Import device ID hook
+import useDeviceId from "@/hooks/useDeviceId";
 import useTheme from "@/hooks/useTheme";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useMutation, useQuery } from "convex/react";
@@ -34,7 +33,6 @@ export default function Index() {
 
   // Convex database operations - now include device ID for user isolation
   const todos = useQuery(api.todos.getTodos, deviceId ? { deviceId } : "skip");
-  //const todos = useQuery(api.todos.getTodos, { deviceId });
   const toggleTodo = useMutation(api.todos.toggleTodo);
   const deleteTodo = useMutation(api.todos.deleteTodo);
   const updateTodo = useMutation(api.todos.updateTodo);
@@ -46,7 +44,7 @@ export default function Index() {
   if(isLoading) return <LoadingSpinner/>
 
   // Don't render anything if device ID is not available
-  if (!deviceId) return <LoadingSpinner/>;
+  if (!deviceId) return <LoadingSpinner/>
 
   /**
    * Toggle the completion status of a todo item
@@ -114,14 +112,12 @@ export default function Index() {
 
     return (
       <View style={homeStyles.todoItemWrapper}>
-        {/* Gradient background for modern visual appeal */}
         <LinearGradient 
         colors={colors.gradients.surface} 
         style={homeStyles.todoItem}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         >
-          {/* Custom checkbox with completion status indicator */}
           <TouchableOpacity 
           style={homeStyles.checkbox} 
           activeOpacity={0.7}
@@ -133,28 +129,21 @@ export default function Index() {
               homeStyles.checkboxInner,
               {borderColor: item.isCompleted ? "transparent" : colors.border},
             ]}
-            >
-              {/* Show checkmark icon when todo is completed */}
-              {item.isCompleted && <Ionicons name="checkmark" size={18} color="#fff" />}
-            </LinearGradient>
+            >{item.isCompleted && <Ionicons name="checkmark" size={18} color="#fff" />}</LinearGradient>
           </TouchableOpacity>
 
-          {/* Conditional rendering: Edit mode vs Display mode */}
           {isEditing  ? (
-            // Edit mode: Shows text input and save/cancel buttons
             <View style={homeStyles.editContainer}>
               <TextInput
                 style={homeStyles.editInput}
                 value={editText}
                 onChangeText={setEditText}
-                autoFocus // Automatically focus when entering edit mode
-                multiline // Allow multiple lines for longer todos
-                //onSubmitEditing={handleSaveEdit} // Save on keyboard submit
+                autoFocus 
+                multiline 
                 placeholder="Edit todo..."
                 placeholderTextColor={colors.textMuted}
               />
               <View style={homeStyles.editButtons}>
-                {/* Save button with success gradient */}
                 <TouchableOpacity onPress={handleSaveEdit} activeOpacity={0.8}>
                   <LinearGradient colors={colors.gradients.success} style={homeStyles.editButton}>
                     <Ionicons name="checkmark" size={16} color="#fff" />
@@ -162,7 +151,6 @@ export default function Index() {
                   </LinearGradient>
                 </TouchableOpacity>
 
-                {/* Cancel button with muted gradient */}
                 <TouchableOpacity onPress={handleCancelEdit} activeOpacity={0.8}>
                   <LinearGradient colors={colors.gradients.muted} style={homeStyles.editButton}>
                     <Ionicons name="close" size={16} color="#fff" />
@@ -172,9 +160,7 @@ export default function Index() {
               </View>
             </View>
           ) : (
-            // Display mode: Shows todo text and action buttons
             <View style = {homeStyles.todoTextContainer}>
-              {/* Todo text with strikethrough effect for completed items */}
               <Text style={[
                   homeStyles.todoText,
                   item.isCompleted && {
@@ -185,15 +171,14 @@ export default function Index() {
                 ]}
               >{item.text}</Text>
 
-              {/* Action buttons: Edit and Delete */}
+             
               <View style={homeStyles.todoActions}>
-                {/* Edit button with warning gradient */}
                 <TouchableOpacity onPress={() => handleEditTodo(item)} activeOpacity={0.8}>
                   <LinearGradient colors={colors.gradients.warning} style={homeStyles.actionButton}>
                     <Ionicons name="pencil" size={14} color="#fff" />
                   </LinearGradient>
                 </TouchableOpacity>
-                {/* Delete button with danger gradient */}
+                
                 <TouchableOpacity onPress={() => handleDeleteTodo(item._id)} activeOpacity={0.8}>
                   <LinearGradient colors={colors.gradients.danger} style={homeStyles.actionButton}>
                     <Ionicons name="trash" size={14} color="#fff" />
@@ -209,31 +194,24 @@ export default function Index() {
 
   // Main component render - App layout structure
   return (
-    // Full-screen gradient background
     <LinearGradient colors={colors.gradients.background} style={homeStyles.container}>
-      {/* Status bar styling based on current theme */}
       <StatusBar barStyle={colors.statusBarStyle} />
-      
-      {/* Safe area wrapper to handle device-specific spacing (notches, etc.) */}
-      <SafeAreaView style={homeStyles.safeArea}>
-        {/* App header component */}
-        <Header />
-        
-        {/* Input component for adding new todos */}
-        <TodoInput />
-        
-        {/* List of todos with efficient rendering via FlatList */}
-        <FlatList
-          data={todos} // Todo items array from Convex database
-          renderItem={renderTodoItem} // Render function for each todo
-          keyExtractor={(item) => item._id} // Unique key for each item
-          style={homeStyles.todoList}
-          contentContainerStyle={homeStyles.todoListContent}
-          ListEmptyComponent={<EmptyState />} // Show when no todos exist
-          //showsVerticalScrollIndicator={false} // Hide scroll indicator for cleaner look
-        />
+        <SafeAreaView style={homeStyles.safeArea}>
+          
+          <Header />
 
-      </SafeAreaView>
+          <TodoInput />
+        
+          <FlatList
+            data={todos}
+            renderItem={renderTodoItem}
+            keyExtractor={(item) => item._id}
+            style={homeStyles.todoList}
+            contentContainerStyle={homeStyles.todoListContent}
+            ListEmptyComponent={<EmptyState />}
+          />
+
+        </SafeAreaView>
     </LinearGradient>
   );
 }

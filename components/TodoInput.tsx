@@ -117,13 +117,11 @@ const TodoInput = () => {
 
     return (
         <View style={homeStyles.inputSection}>
-            {/* Input wrapper container */}
             <View style={homeStyles.inputWrapper}>
-                {/* Main text input field */}
                 <TextInput
                     style={[
                         homeStyles.input,
-                        isSubmitting && homeStyles.inputDisabled // Style for loading state
+                        isSubmitting && homeStyles.inputDisabled 
                     ]}
                     placeholder="Add a new task..."
                     value={newTodo}
@@ -133,12 +131,11 @@ const TodoInput = () => {
                     returnKeyType="done"
                     multiline={false}
                     maxLength={200}
-                    editable={!isSubmitting && !deviceIdLoading} // Disable during loading
-                    autoCorrect={true} // Enable autocorrect for better UX
-                    autoCapitalize="sentences" // Capitalize first letter of sentences
+                    editable={!isSubmitting && !deviceIdLoading} 
+                    autoCorrect={true} 
+                    autoCapitalize="sentences" 
                 />
                 
-                {/* Add button with loading and disabled states */}
                 <TouchableOpacity 
                     onPress={handleAddTodo} 
                     activeOpacity={0.8} 
@@ -152,7 +149,6 @@ const TodoInput = () => {
                             !isAddButtonEnabled && homeStyles.addButtonDisabled
                         ]}
                     >
-                        {/* Show loading indicator or add icon */}
                         {isSubmitting ? (
                             <Ionicons name="hourglass" size={24} color="#ffffff" />
                         ) : (
